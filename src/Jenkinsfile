@@ -57,6 +57,7 @@ pipeline {
                         throw e
                     }
                 }
+                comment("build ok, see: ${BUILD_URL}")
             }
         }
     }
