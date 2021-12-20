@@ -1,5 +1,5 @@
 def reqPost(url, body) {
-    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body, httpMode: 'POST')
+    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body, httpMode: 'POST', validResponseCodes: '100:599')
 }
 
 def comment(text) {
