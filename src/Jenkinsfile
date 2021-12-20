@@ -1,4 +1,5 @@
 
+
 pipeline {
   agent any
 
@@ -6,18 +7,30 @@ pipeline {
           string(name: 'SOURCE_SCM')
           string(name: 'TARGET_SCM')
           string(name: 'PR_OWNER')
+          string(name: 'COMMENTS_URL')
 
       }
+
+
+
+  def req(url, body) {
+    return httpRequest authentication: 'shariktlt_school_devops', url: url, requestBody: body
+  }
+
+  def comment(text) {
+    req("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+  }
 
   stages {
   stage('Build') {
       steps {
 
         echo 'Building...'
-
+        comment('Start building')
         echo "SOURCE_SCM = '${SOURCE_SCM}'"
         echo "TARGET_SCM = '${TARGET_SCM}'"
         echo "PR_OWNER = '${PR_OWNER}'"
+        echo "COMMENTS_URL = '${COMMENTS_URL}'"
 
       }
     }
