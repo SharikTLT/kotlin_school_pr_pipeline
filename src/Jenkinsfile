@@ -1,4 +1,10 @@
+def req(url, body) {
+    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body)
+}
 
+def comment(text) {
+    req("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+}
 
 pipeline {
   agent any
@@ -13,13 +19,7 @@ pipeline {
 
 
 
-  def req(url, body) {
-    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body)
-  }
 
-  def comment(text) {
-    req("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
-  }
 
   stages {
   stage('Build') {
