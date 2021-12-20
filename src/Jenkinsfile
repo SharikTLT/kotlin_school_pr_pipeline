@@ -7,32 +7,31 @@ def comment(text) {
 }
 
 pipeline {
-  agent any
+    agent any
 
-  parameters {
-          string(name: 'SOURCE_SCM', defaultValue: '')
-          string(name: 'TARGET_SCM', defaultValue: '')
-          string(name: 'PR_OWNER', defaultValue: '')
-          string(name: 'COMMENTS_URL', defaultValue: '')
+    parameters {
+        string(name: 'SOURCE_SCM', defaultValue: '')
+        string(name: 'SOURCE_SCM_BRANCH', defaultValue: '')
+        string(name: 'TARGET_SCM', defaultValue: '')
+        string(name: 'PR_OWNER', defaultValue: '')
+        string(name: 'COMMENTS_URL', defaultValue: '')
 
-      }
-
-
-
-
-
-  stages {
-  stage('Build') {
-      steps {
-
-        echo 'Building...'
-        comment('Start building')
-        echo "SOURCE_SCM = '${SOURCE_SCM}'"
-        echo "TARGET_SCM = '${TARGET_SCM}'"
-        echo "PR_OWNER = '${PR_OWNER}'"
-        echo "COMMENTS_URL = '${COMMENTS_URL}'"
-
-      }
     }
-  }
+
+
+    stages {
+        stage('Build') {
+            steps {
+
+                echo 'Building...'
+                comment('Start building')
+                echo "SOURCE_SCM = '${SOURCE_SCM}'"
+                echo "SOURCE_SCM = '${SOURCE_SCM_BRANCH}'"
+                echo "TARGET_SCM = '${TARGET_SCM}'"
+                echo "PR_OWNER = '${PR_OWNER}'"
+                echo "COMMENTS_URL = '${COMMENTS_URL}'"
+
+            }
+        }
+    }
 }
