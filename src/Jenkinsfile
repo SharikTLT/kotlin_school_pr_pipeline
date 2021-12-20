@@ -20,6 +20,7 @@ pipeline {
 
 
     stages {
+
         stage('Build') {
             steps {
 
@@ -31,6 +32,18 @@ pipeline {
                 echo "PR_OWNER = '${PR_OWNER}'"
                 echo "COMMENTS_URL = '${COMMENTS_URL}'"
 
+            }
+        }
+
+        stage('clean_ws'){
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('checkout repository') {
+            steps {
+                git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
             }
         }
     }
