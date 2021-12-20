@@ -10,10 +10,10 @@ pipeline {
   agent any
 
   parameters {
-          string(name: 'SOURCE_SCM')
-          string(name: 'TARGET_SCM')
-          string(name: 'PR_OWNER')
-          string(name: 'COMMENTS_URL')
+          string(name: 'SOURCE_SCM', default: '')
+          string(name: 'TARGET_SCM', default: '')
+          string(name: 'PR_OWNER', default: '')
+          string(name: 'COMMENTS_URL', default: '')
 
       }
 
