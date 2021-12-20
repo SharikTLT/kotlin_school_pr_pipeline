@@ -49,13 +49,13 @@ pipeline {
 
         stage('build') {
             steps {
-                withMaven {
-                    try {
+                try {
+                    withMaven {
                         sh "mvn clean verify"
-                    } catch(Exception e) {
-                        comment("build failed, see: ${BUILD_URL}")
-                        throw e
                     }
+                } catch(Exception e) {
+                    comment("build failed, see: ${BUILD_URL}")
+                    throw e
                 }
                 comment("build ok, see: ${BUILD_URL}")
             }
