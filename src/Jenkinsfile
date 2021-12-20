@@ -1,9 +1,9 @@
-def req(url, body) {
-    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body)
+def reqPost(url, body) {
+    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body, httpMode: 'POST')
 }
 
 def comment(text) {
-    req("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+    reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
 }
 
 pipeline {
