@@ -14,7 +14,7 @@ pipeline {
 
 
   def req(url, body) {
-    return httpRequest authentication: 'shariktlt_school_devops', url: url, requestBody: body
+    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body)
   }
 
   def comment(text) {
