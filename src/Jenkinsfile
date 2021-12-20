@@ -35,7 +35,7 @@ pipeline {
             }
         }
 
-        stage('clean_ws'){
+        stage('clean_ws') {
             steps {
                 cleanWs()
             }
@@ -49,15 +49,18 @@ pipeline {
 
         stage('build') {
             steps {
-                try {
-                    withMaven {
-                        sh "mvn clean verify"
+                script {
+                    try {
+                        withMaven {
+                            sh "mvn clean verify"
+                        }
+                    } catch (Exception e) {
+                        comment("build failed, see: ${BUILD_URL}")
+                        throw e
                     }
-                } catch(Exception e) {
-                    comment("build failed, see: ${BUILD_URL}")
-                    throw e
+
+                    comment("build ok, see: ${BUILD_URL}")
                 }
-                comment("build ok, see: ${BUILD_URL}")
             }
         }
     }
