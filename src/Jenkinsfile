@@ -3,7 +3,7 @@ def reqPost(url, body) {
 }
 
 def comment(text) {
-    reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+    reqPost("${COMMENTS_URL}", "{\"content\":{\"markdown\": \"${text}\"}}")
 }
 
 def approve() {
@@ -71,12 +71,12 @@ pipeline {
                             sh "mvn clean verify"
                         }
                     } catch (Exception e) {
-                        comment("❌ build failed, see: ${BUILD_URL}")
+                        comment(":no_entry: build failed, see: ${BUILD_URL}")
                         changeRequest()
                         throw e
                     }
 
-                    comment("✅ build ok, see: ${BUILD_URL}")
+                    comment(":ok: build ok, see: ${BUILD_URL}")
                     approve()
                 }
             }
