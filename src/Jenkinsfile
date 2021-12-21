@@ -11,7 +11,7 @@ def approve() {
 }
 
 def changeRequest() {
-    reqPost("${CR_URL}", "")
+    reqPost("${CR_URL}", null)
 }
 
 pipeline {
