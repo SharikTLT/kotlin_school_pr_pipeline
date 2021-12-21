@@ -71,12 +71,12 @@ pipeline {
                             sh "mvn clean verify"
                         }
                     } catch (Exception e) {
-                        comment("build failed, see: ${BUILD_URL}")
+                        comment("\\xE2\\x9B\\x94 build failed, see: ${BUILD_URL}")
                         changeRequest()
                         throw e
                     }
 
-                    comment("build ok, see: ${BUILD_URL}")
+                    comment("\\xE2\\x9C\\x85 build ok, see: ${BUILD_URL}")
                     approve()
                 }
             }
