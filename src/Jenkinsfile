@@ -3,7 +3,7 @@ def reqPost(url, body) {
 }
 
 def comment(text) {
-    reqPost("${COMMENTS_URL}", "{\"content\":{\"markdown\": \"${text}\"}}")
+    reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
 }
 
 def approve() {
