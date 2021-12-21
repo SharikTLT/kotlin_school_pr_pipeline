@@ -6,6 +6,14 @@ def comment(text) {
     reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
 }
 
+def approve() {
+    reqPost("${APPROVE_URL}", "")
+}
+
+def changeRequest() {
+    reqPost("${CR_URL}", "")
+}
+
 pipeline {
     agent any
 
@@ -13,8 +21,9 @@ pipeline {
         string(name: 'SOURCE_SCM', defaultValue: '')
         string(name: 'SOURCE_SCM_BRANCH', defaultValue: '')
         string(name: 'TARGET_SCM', defaultValue: '')
-        string(name: 'PR_OWNER', defaultValue: '')
         string(name: 'COMMENTS_URL', defaultValue: '')
+        string(name: 'CR_URL', defaultValue: '')
+        string(name: 'APPROVE_URL', defaultValue: '')
 
     }
 
@@ -27,10 +36,11 @@ pipeline {
                 echo 'Building...'
                 comment('Start building')
                 echo "SOURCE_SCM = '${SOURCE_SCM}'"
-                echo "SOURCE_SCM = '${SOURCE_SCM_BRANCH}'"
+                echo "SOURCE_SCM_BRANCH = '${SOURCE_SCM_BRANCH}'"
                 echo "TARGET_SCM = '${TARGET_SCM}'"
-                echo "PR_OWNER = '${PR_OWNER}'"
                 echo "COMMENTS_URL = '${COMMENTS_URL}'"
+                echo "CR_URL = '${CR_URL}'"
+                echo "APPROVE_URL = '${APPROVE_URL}'"
 
             }
         }
@@ -56,10 +66,12 @@ pipeline {
                         }
                     } catch (Exception e) {
                         comment("build failed, see: ${BUILD_URL}")
+                        changeRequest()
                         throw e
                     }
 
                     comment("build ok, see: ${BUILD_URL}")
+                    approve()
                 }
             }
         }
