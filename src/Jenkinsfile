@@ -44,8 +44,9 @@ pipeline {
                 echo "APPROVE_URL = '${APPROVE_URL}'"
                 echo "TARGET_FULLNAME = '${TARGET_FULLNAME}'"
                 echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
-
-                currentBuild.displayName = "${SOURCE_FULLNAME} > ${TARGET_FULLNAME}"
+                script {
+                    currentBuild.displayName = "${SOURCE_FULLNAME} > ${TARGET_FULLNAME}"
+                }
 
             }
         }
