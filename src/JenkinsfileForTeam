@@ -48,7 +48,7 @@ pipeline {
                 echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
                 echo "SOURCE_PR_NUM = '${SOURCE_PR_NUM}'"
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER}: ${TARGET_FULLNAME} PR ${SOURCE_PR_NUM}"
+                    currentBuild.displayName = "#${BUILD_NUMBER}: ${TARGET_FULLNAME} ${SOURCE_SCM_BRANCH} PR ${SOURCE_PR_NUM}"
                 }
 
             }
