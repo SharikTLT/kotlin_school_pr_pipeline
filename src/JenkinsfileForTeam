@@ -69,7 +69,7 @@ pipeline {
             steps {
                 sh "git fetch"
                 sh "git checkout master"
-                sh "git "
+                sh "git merge ${SOURCE_SCM_BRANCH}"
             }
         }
 
@@ -78,7 +78,7 @@ pipeline {
                 script {
                     try {
                         withMaven {
-                            sh "mvn clean verify"
+                            sh "mvn clean install"
                         }
                     } catch (Exception e) {
                         comment(":no_entry: build failed, see: ${BUILD_URL}")
