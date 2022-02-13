@@ -27,7 +27,7 @@ pipeline {
         string(name: 'APPROVE_URL', defaultValue: '')
         string(name: 'TARGET_FULLNAME', defaultValue: '')
         string(name: 'SOURCE_FULLNAME', defaultValue: '')
-
+        string(name: 'SOURCE_PR_NUM', defaultValue: '')
     }
 
 
@@ -46,8 +46,9 @@ pipeline {
                 echo "APPROVE_URL = '${APPROVE_URL}'"
                 echo "TARGET_FULLNAME = '${TARGET_FULLNAME}'"
                 echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
+                echo "SOURCE_PR_NUM = '${SOURCE_PR_NUM}'"
                 script {
-                    currentBuild.displayName = "#${BUILD_NUMBER}: ${SOURCE_FULLNAME} > ${TARGET_FULLNAME}"
+                    currentBuild.displayName = "#${BUILD_NUMBER}: ${TARGET_FULLNAME} PR ${SOURCE_PR_NUM}"
                 }
 
             }
