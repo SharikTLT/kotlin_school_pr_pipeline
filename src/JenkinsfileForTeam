@@ -1,0 +1,95 @@
+def reqPost(url, body) {
+    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body, httpMode: 'POST', validResponseCodes: '100:599', contentType: 'APPLICATION_JSON')
+}
+
+def comment(text) {
+    reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+}
+
+def approve() {
+    reqPost("${APPROVE_URL}", "{}")
+}
+
+def changeRequest() {
+    reqPost("${CR_URL}", "{}")
+}
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'SOURCE_SCM', defaultValue: '')
+        string(name: 'SOURCE_SCM_BRANCH', defaultValue: '')
+        string(name: 'TARGET_SCM', defaultValue: '')
+        string(name: 'TARGET_SCM_BRANCH', defaultValue: 'master')
+        string(name: 'COMMENTS_URL', defaultValue: '')
+        string(name: 'CR_URL', defaultValue: '')
+        string(name: 'APPROVE_URL', defaultValue: '')
+        string(name: 'TARGET_FULLNAME', defaultValue: '')
+        string(name: 'SOURCE_FULLNAME', defaultValue: '')
+
+    }
+
+
+    stages {
+
+        stage('Setup') {
+            steps {
+
+                echo 'Building...'
+                echo "SOURCE_SCM = '${SOURCE_SCM}'"
+                echo "SOURCE_SCM_BRANCH = '${SOURCE_SCM_BRANCH}'"
+                echo "TARGET_SCM = '${TARGET_SCM}'"
+                echo "TARGET_SCM_BRANCH = '${TARGET_SCM_BRANCH}'"
+                echo "COMMENTS_URL = '${COMMENTS_URL}'"
+                echo "CR_URL = '${CR_URL}'"
+                echo "APPROVE_URL = '${APPROVE_URL}'"
+                echo "TARGET_FULLNAME = '${TARGET_FULLNAME}'"
+                echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
+                script {
+                    currentBuild.displayName = "#${BUILD_NUMBER}: ${SOURCE_FULLNAME} > ${TARGET_FULLNAME}"
+                }
+
+            }
+        }
+
+        stage('clean_ws') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('checkout repository') {
+            steps {
+                git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
+            }
+        }
+
+        stage('checkout master and merge') {
+            steps {
+                sh "git fetch"
+                sh "git checkout master"
+                sh "git "
+            }
+        }
+
+        stage('build') {
+            steps {
+                script {
+                    try {
+                        withMaven {
+                            sh "mvn clean verify"
+                        }
+                    } catch (Exception e) {
+                        comment(":no_entry: build failed, see: ${BUILD_URL}")
+                        changeRequest()
+                        throw e
+                    }
+
+                    comment(":ok: build ok, see: ${BUILD_URL}")
+                    approve()
+                }
+            }
+        }
+    }
+}
