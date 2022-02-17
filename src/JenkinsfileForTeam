@@ -79,7 +79,7 @@ pipeline {
                 script {
                     try {
                         withMaven {
-                            sh "/home/shariktlt/apache-maven-3.8.4/bin/mvn clean install"
+                            sh "/opt/maven-3.8.4/bin/mvn clean install"
                         }
                     } catch (Exception e) {
                         comment(":no_entry: build failed, see: ${BUILD_URL}")
