@@ -72,7 +72,7 @@ pipeline {
                 script {
                     try {
                         withMaven {
-                            sh "mvn clean verify"
+                            sh "/opt/maven-3.8.4/bin/mvn clean verify"
                         }
                     } catch (Exception e) {
                         comment(":no_entry: build failed, see: ${BUILD_URL}")
