@@ -6,7 +6,7 @@ def review(action, text) {
     reqPost("${PR_URL}/reviews", "{\"body\": \"${text}\", \"event\":\"${action}\"}")
 }
 
-var ALLOWED_ACTIONS = [ 'pull_request.opened', 'pull_request.synchronize']
+def ALLOWED_ACTIONS = [ 'pull_request.opened', 'pull_request.synchronize']
 
 pipeline {
     agent any
