@@ -18,12 +18,11 @@ pipeline {
     agent any
 
     parameters {
+        string(name: 'ACTION', defaultValue: 'ping')
         string(name: 'SOURCE_SCM', defaultValue: '')
         string(name: 'SOURCE_SCM_BRANCH', defaultValue: '')
         string(name: 'TARGET_SCM', defaultValue: '')
-        string(name: 'COMMENTS_URL', defaultValue: '')
-        string(name: 'CR_URL', defaultValue: '')
-        string(name: 'APPROVE_URL', defaultValue: '')
+        string(name: 'PR_URL', defaultValue: '')
         string(name: 'TARGET_FULLNAME', defaultValue: '')
         string(name: 'SOURCE_FULLNAME', defaultValue: '')
 
@@ -36,12 +35,11 @@ pipeline {
             steps {
 
                 echo 'Building...'
+                echo "ACTION = '${ACTION}'"
                 echo "SOURCE_SCM = '${SOURCE_SCM}'"
                 echo "SOURCE_SCM_BRANCH = '${SOURCE_SCM_BRANCH}'"
                 echo "TARGET_SCM = '${TARGET_SCM}'"
-                echo "COMMENTS_URL = '${COMMENTS_URL}'"
-                echo "CR_URL = '${CR_URL}'"
-                echo "APPROVE_URL = '${APPROVE_URL}'"
+                echo "PR_URL = '${PR_URL}'"
                 echo "TARGET_FULLNAME = '${TARGET_FULLNAME}'"
                 echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
                 script {
@@ -58,12 +56,18 @@ pipeline {
         }
 
         stage('checkout repository') {
+            when {
+                expression { return env.ACTION != 'ping'; }
+            }
             steps {
                 git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
             }
         }
 
         stage('build') {
+             when {
+                expression { return env.ACTION != 'ping'; }
+            }
             steps {
                 script {
                     try {
