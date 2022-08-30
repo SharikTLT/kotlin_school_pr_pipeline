@@ -6,7 +6,7 @@ def review(action, text) {
     reqPost("${PR_URL}/reviews", "{\"body\": \"${text}\", \"event\":\"${action}\"}")
 }
 
-
+var ALLOWED_ACTIONS = [ 'pull_request.opened', 'pull_request.synchronize']
 
 pipeline {
     agent any
@@ -51,7 +51,7 @@ pipeline {
 
         stage('checkout repository') {
             when {
-                expression { return env.ACTION != 'ping'; }
+                expression { return ALLOWED_ACTIONS.contains(env.ACTION); }
             }
             steps {
                 git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
@@ -60,7 +60,7 @@ pipeline {
 
         stage('build') {
              when {
-                expression { return env.ACTION != 'ping'; }
+                expression { return ALLOWED_ACTIONS.contains(env.ACTION); }
             }
             steps {
                 script {
