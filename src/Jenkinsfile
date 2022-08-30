@@ -1,18 +1,12 @@
 def reqPost(url, body) {
-    return httpRequest(authentication: 'shariktlt_school_devops', url: url, requestBody: body, httpMode: 'POST', validResponseCodes: '100:599', contentType: 'APPLICATION_JSON')
+    return httpRequest(authentication: 'shariktlt_devops_token', url: url, requestBody: body, httpMode: 'POST', validResponseCodes: '100:599', contentType: 'APPLICATION_JSON')
 }
 
-def comment(text) {
-    reqPost("${COMMENTS_URL}", "{\"content\":{\"raw\": \"${text}\"}}")
+def review(action, text) {
+    reqPost("${PR_URL}/reviews", "{\"body\": \"${text}\", \"event\":\"${action}\"}")
 }
 
-def approve() {
-    reqPost("${APPROVE_URL}", "{}")
-}
 
-def changeRequest() {
-    reqPost("${CR_URL}", "{}")
-}
 
 pipeline {
     agent any
@@ -75,13 +69,11 @@ pipeline {
                             sh "/opt/maven-3.8.4/bin/mvn clean verify"
                         }
                     } catch (Exception e) {
-                        comment(":no_entry: build failed, see: ${BUILD_URL}")
-                        changeRequest()
+                        review("REQUEST_CHANGES", ":no_entry: build failed, see: ${BUILD_URL}")
                         throw e
                     }
 
-                    comment(":ok: build ok, see: ${BUILD_URL}")
-                    approve()
+                    review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
                 }
             }
         }
