@@ -55,6 +55,9 @@ pipeline {
             }
             steps {
                 git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
+                sh "git remote add base ${TARGET_SCM}"
+                sh "git fetch base main"
+                sh "git merge --ff-only base/main"
             }
         }
 
