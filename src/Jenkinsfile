@@ -8,6 +8,8 @@ def review(action, text) {
 
 def ALLOWED_ACTIONS = [ 'opened', 'synchronize']
 
+def targetBranch = "main"
+
 pipeline {
     agent any
 
@@ -38,6 +40,8 @@ pipeline {
                 echo "SOURCE_FULLNAME = '${SOURCE_FULLNAME}'"
                 script {
                     currentBuild.displayName = "#${BUILD_NUMBER}: ${SOURCE_FULLNAME} > ${TARGET_FULLNAME}"
+                    def (user_tmp, branch_tmp) = "${TARGET_FULLNAME}".split(":")
+                    targetBranch = branch_tmp
                 }
 
             }
@@ -53,12 +57,13 @@ pipeline {
             when {
                 expression { return ALLOWED_ACTIONS.contains(env.ACTION); }
             }
+
             steps {
                 git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
                 sh "git remote add origin2 ${TARGET_SCM}"
                 sh "git fetch origin2"
-                sh "git checkout origin2/main"
-                sh "git merge ${SOURCE_SCM_BRANCH} -m \"merge with main\" "
+                sh "git checkout origin2/${targetBranch}"
+                sh "git merge ${SOURCE_SCM_BRANCH} -m \"merge with ${targetBranch}\" "
             }
         }
 
