@@ -101,7 +101,7 @@ pipeline {
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
                         output.tokenize('\n').collect() {
                             def module = it
-                            if(buildOnly.size() > 0 && !buildOnly.contains()){
+                            if(buildOnly.size() > 0 && !buildOnly.contains(module)){
                                 println "skip module ${module}"
                                 return true
                             }
