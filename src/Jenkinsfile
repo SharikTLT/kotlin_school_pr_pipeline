@@ -94,8 +94,10 @@ pipeline {
                             def module = it
 
                             try {
-                                withMaven {
-                                    sh "cd ${module} && /opt/maven-3.8.4/bin/mvn clean verify"
+                                timeout(time:60, unit:'SECOND') {
+                                    withMaven {
+                                        sh "cd ${module} && /opt/maven-3.8.4/bin/mvn clean verify"
+                                    }
                                 }
                             } catch (Exception e) {
                                 failedModules.add(module)
