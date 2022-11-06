@@ -94,7 +94,9 @@ pipeline {
                         def matcherTitle = "${PR_TITLE}" =~ /\[buildOnly:([^\]]+)\]/
                         if(matcherTitle.find()){
                             buildOnly = matcherTitle.group(1).split(",")
+                            matcherTitle = null
                         }
+                        matcherTitle = null
 
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
                         output.tokenize('\n').collect() {
