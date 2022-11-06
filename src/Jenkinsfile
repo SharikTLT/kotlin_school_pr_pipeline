@@ -21,6 +21,7 @@ pipeline {
         string(name: 'PR_URL', defaultValue: '')
         string(name: 'TARGET_FULLNAME', defaultValue: '')
         string(name: 'SOURCE_FULLNAME', defaultValue: '')
+        string(name: 'PR_TITLE', defaultValue: '')
 
     }
 
@@ -89,10 +90,20 @@ pipeline {
                     } else {
                         def failedModules = []
 
+                        def buildOnly = []
+                        def title = "${PR_TITLE}".toString()
+                        def matcher =  java.util.regex.Pattern.compile("\\[buildOnly:([^\\]]+)\\]").matcher()
+                        if(matcher.find()){
+                            buildOnly = matcher.group(1).split(",")
+                        }
+
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
                         output.tokenize('\n').collect() {
                             def module = it
-
+                            if(buildOnly.size() > 0 && !buildOnly.contains()){
+                                println "skip module ${module}"
+                                return true
+                            }
                             try {
                                 timeout(time:90, unit:'SECONDS') {
                                     withMaven {
