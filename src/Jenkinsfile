@@ -73,7 +73,7 @@ pipeline {
             }
             steps {
                 script {
-                    var singlePom = fileExists 'pom.xml'
+                    def singlePom = fileExists 'pom.xml'
 
                     if (singlePom) {
                         try {
@@ -87,11 +87,11 @@ pipeline {
 
                         review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
                     } else {
-                        var failedModules = []
+                        def failedModules = []
 
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
                         output.tokenize('\n').collect() {
-                            var module = it
+                            def module = it
 
                             try {
                                 withMaven {
@@ -106,7 +106,7 @@ pipeline {
                         if (failedModules.size() == 0) {
                             review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
                         } else {
-                            var FAILED_MODULES_STR = failedModules.join(", ")
+                            def FAILED_MODULES_STR = failedModules.join(", ")
                             review("REQUEST_CHANGES", ":no_entry: build failed with modules ${FAILED_MODULES_STR}, see: ${BUILD_URL}")
                             currentBuild.result = "UNSTABLE"
                         }
