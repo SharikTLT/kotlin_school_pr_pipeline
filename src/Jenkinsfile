@@ -6,7 +6,7 @@ def review(action, text) {
     reqPost("${PR_URL}/reviews", "{\"body\": \"${text}\", \"event\":\"${action}\"}")
 }
 
-def ALLOWED_ACTIONS = [ 'opened', 'synchronize']
+def ALLOWED_ACTIONS = ['opened', 'synchronize']
 
 def targetBranch = "main"
 
@@ -68,21 +68,49 @@ pipeline {
         }
 
         stage('build') {
-             when {
+            when {
                 expression { return ALLOWED_ACTIONS.contains(env.ACTION); }
             }
             steps {
                 script {
-                    try {
-                        withMaven {
-                            sh "/opt/maven-3.8.4/bin/mvn clean verify"
-                        }
-                    } catch (Exception e) {
-                        review("REQUEST_CHANGES", ":no_entry: build failed, see: ${BUILD_URL}")
-                        throw e
-                    }
+                    var singlePom = fileExists 'pom.xml'
 
-                    review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
+                    if (singlePom) {
+                        try {
+                            withMaven {
+                                sh "/opt/maven-3.8.4/bin/mvn clean verify"
+                            }
+                        } catch (Exception e) {
+                            review("REQUEST_CHANGES", ":no_entry: build failed, see: ${BUILD_URL}")
+                            throw e
+                        }
+
+                        review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
+                    } else {
+                        var failedModules = []
+
+                        def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
+                        output.tokenize('\n').collect() {
+                            var module = it
+
+                            try {
+                                withMaven {
+                                    sh "cd ${module} && /opt/maven-3.8.4/bin/mvn clean verify"
+                                }
+                            } catch (Exception e) {
+                                failedModules.add(module)
+                            }
+                        }
+
+
+                        if (failedModules.size() == 0) {
+                            review("APPROVE", ":ok: build ok, see: ${BUILD_URL}")
+                        } else {
+                            var FAILED_MODULES_STR = failedModules.join(", ")
+                            review("REQUEST_CHANGES", ":no_entry: build failed with modules ${FAILED_MODULES_STR}, see: ${BUILD_URL}")
+                            currentBuild.result = "UNSTABLE"
+                        }
+                    }
                 }
             }
         }
