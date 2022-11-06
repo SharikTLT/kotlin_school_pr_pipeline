@@ -6,7 +6,7 @@ def review(action, text) {
     reqPost("${PR_URL}/reviews", "{\"body\": \"${text}\", \"event\":\"${action}\"}")
 }
 
-def ALLOWED_ACTIONS = ['opened', 'synchronize']
+def ALLOWED_ACTIONS = ['opened', 'synchronize', 'edited']
 
 def targetBranch = "main"
 
