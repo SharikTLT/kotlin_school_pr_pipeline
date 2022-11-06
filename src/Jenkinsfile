@@ -94,7 +94,7 @@ pipeline {
                             def module = it
 
                             try {
-                                timeout(time:60, unit:'SECOND') {
+                                timeout(time:60, unit:'SECONDS') {
                                     withMaven {
                                         sh "cd ${module} && /opt/maven-3.8.4/bin/mvn clean verify"
                                     }
