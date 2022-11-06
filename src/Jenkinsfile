@@ -92,7 +92,7 @@ pipeline {
 
                         def buildOnly = []
                         def title = "${PR_TITLE}".toString()
-                        def matcher =  java.util.regex.Pattern.compile("\\[buildOnly:([^\\]]+)\\]").matcher()
+                        def matcher =  java.util.regex.Pattern.compile("\\[buildOnly:([^\\]]+)\\]").matcher(title)
                         if(matcher.find()){
                             buildOnly = matcher.group(1).split(",")
                         }
