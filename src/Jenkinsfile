@@ -91,10 +91,9 @@ pipeline {
                         def failedModules = []
 
                         def buildOnly = []
-                        def title = "${PR_TITLE}".toString()
-                        def matcher =  java.util.regex.Pattern.compile("\\[buildOnly:([^\\]]+)\\]").matcher(title)
-                        if(matcher.find()){
-                            buildOnly = matcher.group(1).split(",")
+                        def matcherTitle = "${PR_TITLE}" =~ /\[buildOnly:([^\]]+)\]/
+                        if(matcherTitle.find()){
+                            buildOnly = matcherTitle.group(1).split(",")
                         }
 
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
