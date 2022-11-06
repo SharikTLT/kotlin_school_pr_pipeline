@@ -93,7 +93,7 @@ pipeline {
                         def buildOnly = []
                         def matcherTitle = "${PR_TITLE}" =~ /\[buildOnly:([^\]]+)\]/
                         if(matcherTitle.find()){
-                            buildOnly = matcherTitle.group(1).split(",")
+                            buildOnly.addAll(matcherTitle.group(1).split(","))
                             matcherTitle = null
                         }
                         matcherTitle = null
