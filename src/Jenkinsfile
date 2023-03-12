@@ -81,7 +81,7 @@ pipeline {
                     
                     if (singlePom) {
                         try {
-                            withMaven {
+                            withMaven(maven: 'maven_3.8.5') {
                                 sh "mvn clean verify"
                             }
                         } catch (Exception e) {
@@ -110,7 +110,7 @@ pipeline {
                             }
                             try {
                                 timeout(time:90, unit:'SECONDS') {
-                                    withMaven {
+                                    withMaven(maven: 'maven_3.8.5') {
                                         sh "cd ${module} && mvn clean verify"
                                     }
                                 }
