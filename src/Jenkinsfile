@@ -60,7 +60,8 @@ pipeline {
             }
 
             steps {
-                git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}"
+                git branch: "${SOURCE_SCM_BRANCH}", url: "${SOURCE_SCM}", credentialsId: 'shariktlt-devops-local-ssh'
+              
                 sh "git remote add origin2 ${TARGET_SCM}"
                 sh "git fetch origin2"
                 sh "git checkout origin2/${targetBranch}"
