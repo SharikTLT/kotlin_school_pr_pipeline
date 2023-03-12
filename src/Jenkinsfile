@@ -77,7 +77,7 @@ pipeline {
                 script {
                     def singlePom = fileExists 'pom.xml'
 
-                    println("pom.xml in root = '${singlePom}')
+                    println("pom.xml in root = '${singlePom}'")
                     
                     if (singlePom) {
                         try {
