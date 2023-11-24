@@ -97,17 +97,30 @@ pipeline {
                         def matcherTitle = "${PR_TITLE}" =~ /\[buildOnly:([^\]]+)\]/
                         if(matcherTitle.find()){
                             buildOnly.addAll(matcherTitle.group(1).split(","))
-                            matcherTitle = null
+                        }
+
+
+                        def jdkEdge = []
+                        matcherTitle = "${PR_TITLE}" =~ /\[jdkEdge:([^\]]+)\]/
+                        if(matcherTitle.find()){
+                            jdkEdge.addAll(matcherTitle.group(1).split(","))
                         }
                         matcherTitle = null
 
                         def output = sh returnStdout: true, script: "ls -l | grep ^d | awk '{print \$9}'"
+                        def origJavaHome = "/usr/lib/jvm/java-11-openjdk-amd64"
+
                         output.tokenize('\n').collect() {
                             def module = it
                             if(buildOnly.size() > 0 && !buildOnly.contains(module)){
                                 println "skip module ${module}"
                                 return true
                             }
+                            def javaHome = origJavaHome
+                            if(jdkEdge.size() > 0 && !jdkEdge.contains(module)){
+                               javaHome = "/usr/lib/jvm/openjdk-21"
+                            }
+                            env.JAVA_HOME = javaHome
                             try {
                                 timeout(time:90, unit:'SECONDS') {
                                     withMaven(maven: 'maven_3.8.5') {
