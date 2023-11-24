@@ -117,14 +117,13 @@ pipeline {
                                 return true
                             }
                             def javaHome = origJavaHome
-                            if(jdkEdge.size() > 0 && !jdkEdge.contains(module)){
+                            if(jdkEdge.size() > 0 && jdkEdge.contains(module)){
                                javaHome = "/usr/lib/jvm/openjdk-21"
                             }
-                            env.JAVA_HOME = javaHome
                             try {
                                 timeout(time:90, unit:'SECONDS') {
                                     withMaven(maven: 'maven_3.8.5') {
-                                        sh "cd ${module} && mvn clean verify"
+                                        sh "cd ${module} && export JAVA_HOME=\"${javaHome}\" && mvn clean verify"
                                     }
                                 }
                             } catch (Exception e) {
